@@ -1,0 +1,22 @@
+/* 
+ * Table
+*/
+
+table {
+	width: 50%;
+	border-collapse: collapse;
+}
+
+th, td {
+	border: 1px solid #dddddd;
+	padding: 0.5rem;
+	text-align: left;
+}
+
+tr:nth-child(even) {
+	background-color: #dddddd;
+}
+
+tbody tr:hover {
+	background-color: #aaaaaa;
+}

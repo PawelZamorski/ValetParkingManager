@@ -13,5 +13,11 @@
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
+	<classpathentry kind="lib" path="C:/Users/MoioM/Desktop/JEE/JDBC/mysql-connector-java-8.0.18/mysql-connector-java-8.0.18.jar" sourcepath="C:/Users/MoioM/Desktop/JEE/JDBC/mysql-connector-java-8.0.18">
+		<attributes>
+			<attribute name="source_encoding" value="UTF-8"/>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

@@ -7,10 +7,38 @@
   <servlet>
     <servlet-name>valet-parking</servlet-name>
     <!-- Fully qualified path name (with package name)  -->
-    <servlet-class>com.vpm.ValetParkingServlet</servlet-class>
+    <servlet-class>com.vpm.ValetParkingSelectServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>valet-parking</servlet-name>
     <url-pattern>/valet-parking</url-pattern>
   </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>valet-parking-insert</servlet-name>
+    <servlet-class>com.vpm.ValetParkingInsertServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>valet-parking-insert</servlet-name>
+    <url-pattern>/valet-parking-insert</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>valet-parking-delete</servlet-name>
+    <servlet-class>com.vpm.ValetParkingDeleteServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>valet-parking-delete</servlet-name>
+    <url-pattern>/valet-parking-delete</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>valet-parking-update</servlet-name>
+    <servlet-class>com.vpm.ValetParkingUpdateServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>valet-parking-update</servlet-name>
+    <url-pattern>/valet-parking-update</url-pattern>
+  </servlet-mapping>
+  
 </web-app>

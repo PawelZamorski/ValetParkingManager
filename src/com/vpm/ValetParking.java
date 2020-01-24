@@ -1,18 +1,33 @@
 package com.vpm;
 
 import java.time.LocalDate;
-import java.util.Date;
 
+/**
+ * POJO class
+ * The fields data type should correspond with the data type in DB table
+ * The constructor has the required fields
+ * The id field is required and is a primary key in a database
+ * The arrivalDate is required in a database
+ * 
+ * @author MoioM
+ */
 public class ValetParking {
 	private int id;
 	private String name;
 	private String registration;
 	private LocalDate arrivalDate;
 	
-	public ValetParking() {
+	/**
+	 * 
+	 * @param id
+	 * @param arrivalDate
+	 */
+	public ValetParking(int id, LocalDate arrivalDate) {
 		super();
+		this.id = id;
+		this.arrivalDate = arrivalDate;
 	}
-	
+		
 	/**
 	 * @param id
 	 * @param name
@@ -29,10 +44,6 @@ public class ValetParking {
 
 	public int getId() {
 		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
 	}
 
 	public String getName() {
@@ -53,10 +64,6 @@ public class ValetParking {
 
 	public LocalDate getArrivalDate() {
 		return arrivalDate;
-	}
-
-	public void setArrivalDate(LocalDate arrivalDate) {
-		this.arrivalDate = arrivalDate;
 	}
 
 	@Override

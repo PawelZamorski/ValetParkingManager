@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="com.vpm.ValetParking" %>
 <%@ page import="java.util.List" %>
+<%@ page import="java.time.LocalDate" %>
 
 <%-- Get data from request --%>
 <%
@@ -42,12 +43,47 @@
         <td><% out.println(vp.getId()); %></td>
         <td><% out.println(vp.getName()); %></td>
         <td><% out.println(vp.getRegistration()); %></td>
-        <td><% out.println(vp.getArrivalDate().toString()); %></td>
+        <% LocalDate date = vp.getArrivalDate();
+           if(date != null) { %>
+             <td><% out.println(date); %></td>
+         <%} else {%>
+             <td><% out.println("null"); %></td>
+         <%} %>
       </tr>
       <%
       }
       %>
     </tbody>
-  </table>  
+  </table>
+  <br />
+  <form action="valet-parking-insert" method="post" >
+    <label for="id">Id:</label>
+    <input type="number" id="id" placeholder="Insert id" name="id" required>
+    <label for="name">Name:</label>
+    <input type="text" id="name" placeholder="Insert name" name="name">
+    <label for="registration">Registration:</label>
+    <input type="text" id="registration" placeholder="Insert registration" name="registration">
+    <label for="date">Arrival date:</label>
+    <input type="date" id="date" placeholder="Insert arrival date" name="arrival_date">
+    <input type="submit" value="insert">
+  </form>
+  <br />
+  <form action="valet-parking-delete" method="post">
+    <label for="id">Id:</label>
+    <input type="number" id="id" placeholder="Insert id" name="id" required>
+    <input type="submit" value="delete">
+  </form>
+  <br />
+  <form action="valet-parking-update" method="post">
+    <label for="id">Id: </label>
+    <input type="number" id="id" placeholder="Insert id" name="id" required>
+    <label for="name">Name: </label>
+    <input type="text" id="name" placeholder="Insert name" name="name">
+    <label for="registration">Registration: </label>
+    <input type="text" id="registration" placeholder="Insert registration" name="registration">
+    <label for="arrival_date">Arrival date: </label>
+    <input type="date" id="arrival_date" placeholder="Insert arrival date" name="arrival_date">
+    <input type="submit" value="update">
+  </form>
 </body>
 </html>

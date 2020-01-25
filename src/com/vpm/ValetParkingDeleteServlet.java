@@ -14,16 +14,21 @@ public class ValetParkingDeleteServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	public void service(HttpServletRequest req, HttpServletResponse res) {
+		// Create DAOFactoryMysql using DAOFactory
+		DAOFactory mysqlFactory = DAOFactory.getDAOFactory(DAOFactory.MYSQL);
+		// Create ValetParkingDAO using DAOFactoryMysql
+		ValetParkingDAO vpDAO = mysqlFactory.getValetParkingDAO();
+		
 		PrintWriter out = null;
 		
 		int id = Integer.parseInt(req.getParameter("id"));
-		int i = ValetParkingDAO.delete(id);
+		int i = vpDAO.delete(id);
 
 		req.setAttribute("noOfItemsDeleted", i);
 
 		// Select all data
 		// Get data from Model (from database)
-		List<ValetParking> dataItems = ValetParkingDAO.selectAll();
+		List<ValetParking> dataItems = vpDAO.readAll();
 		req.setAttribute("dataItems", dataItems);
 		
 		RequestDispatcher dispatcher = req.getRequestDispatcher("valet-parking.jsp");

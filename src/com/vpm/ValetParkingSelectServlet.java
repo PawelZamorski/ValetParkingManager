@@ -14,10 +14,15 @@ public class ValetParkingSelectServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	public void service(HttpServletRequest req, HttpServletResponse res) {
+		// Create DAOFactoryMysql using DAOFactory
+		DAOFactory mysqlFactory = DAOFactory.getDAOFactory(DAOFactory.MYSQL);
+		// Create ValetParkingDAO using DAOFactoryMysql
+		ValetParkingDAO vpDAO = mysqlFactory.getValetParkingDAO();
+
 		PrintWriter out = null;
 		
 		// Get data from Model (from database)
-		List<ValetParking> dataItems = ValetParkingDAO.selectAll();
+		List<ValetParking> dataItems = vpDAO.readAll();
 		req.setAttribute("dataItems", dataItems);
 		
 		// Dispatch to View (JSP page)

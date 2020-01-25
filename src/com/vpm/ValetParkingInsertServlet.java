@@ -15,6 +15,11 @@ public class ValetParkingInsertServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	public void service(HttpServletRequest req, HttpServletResponse res) {
+		// Create DAOFactoryMysql using DAOFactory
+		DAOFactory mysqlFactory = DAOFactory.getDAOFactory(DAOFactory.MYSQL);
+		// Create ValetParkingDAO using DAOFactoryMysql
+		ValetParkingDAO vpDAO = mysqlFactory.getValetParkingDAO();
+
 		PrintWriter out = null;
 		// Get data from request
 		int id = Integer.parseInt(req.getParameter("id"));
@@ -27,8 +32,8 @@ public class ValetParkingInsertServlet extends HttpServlet {
 		
 		// Get data from Model (from database)
 		// Test if PrimaryKey is not repeated
-		if(ValetParkingDAO.select(vp.getId()) == null) {
-			int i = ValetParkingDAO.insert(vp);
+		if(vpDAO.read(vp.getId()) == null) {
+			int i = vpDAO.create(vp);
 			req.setAttribute("noOfInsertedItems", i);			
 		}else {
 			req.setAttribute("noOfInsertedItems", 0);			
@@ -36,7 +41,7 @@ public class ValetParkingInsertServlet extends HttpServlet {
 
 		// Select all data
 		// Get data from Model (from database)
-		List<ValetParking> dataItems = ValetParkingDAO.selectAll();
+		List<ValetParking> dataItems = vpDAO.readAll();
 		req.setAttribute("dataItems", dataItems);
 		
 		// Dispatch to View (JSP page)

@@ -2,8 +2,10 @@ package com.vpm;
 
 import java.util.List;
 
+import javax.servlet.ServletException;
+
 import java.util.ArrayList;
-// Step 1 import java.sql.* package
+// NOTE: Step 1: import java.sql.* package
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Connection;
@@ -15,7 +17,6 @@ import java.sql.ResultSet;
 /**
  * Implementation of ValetParkingDAO to work with MySQL RDBMS.
  * 
- * It uses JDBC API for accessing and manipulation of data in persistent storage.
  * CRUD class - create, retrieve/read, update, delete
  * 
  * @author MoioM
@@ -32,39 +33,44 @@ public class ValetParkingDAOMysql implements ValetParkingDAO {
 	 * @param item ValetParking object
 	 * @return 0 if no data where inserted or 1 if the data where inserted to the DB
 	 */
-	public int create(ValetParking item) {
+	public int create(ValetParking item) throws ServletException {
 		int i = 0;
 		Connection con = null;
 		PreparedStatement pstm = null;
 
-		// Step 2 Load and register the Driver
 		try {
+// NOTE: step 2: Create Connection
 			con = DAOFactoryMysql.getConnection();
-			// Step 4 Create Statement
+// NOTE: step 3: Create PreparedStatement/Statement
 			String sql = "INSERT INTO car_list (id, name, registration, arrival_date) VALUES (?, ?, ?, ?)";
 			pstm = con.prepareStatement(sql);
-			// Step 5 Execute the query
-			// Always use column name. Otherwise, if the table is changed in DB (more columns added) this method will throw an exception	
+// NOTE: step 4: Execute the query
+// NOTE: Always use column name. Otherwise, if the table is changed in DB (more columns added) this method will throw an exception	
 			pstm.setInt(1, item.getId());
 			pstm.setString(2, item.getName());
 			pstm.setString(3, item.getRegistration());
 			pstm.setDate(4, Date.valueOf(item.getArrivalDate().toString()));
 			i = pstm.executeUpdate();
-		}catch(ClassNotFoundException cnfEx) {
-			cnfEx.printStackTrace();
-		}catch(SQLException sqlEx) {
-			sqlEx.printStackTrace();
-		}finally { // Step 6 Close connection
-			try {
-				if(pstm != null) pstm.close();				
-			}catch(SQLException sqlEx) {
-				sqlEx.printStackTrace();
+		}catch(ClassNotFoundException | SQLException e) {
+			throw new ServletException(e);
+		}finally {
+// NOTE: step 5: Close PreparedStatement and Connection
+			if(pstm != null) {
+				try {
+					pstm.close();
+				}catch(SQLException e) {
+					pstm = null;
+					throw new ServletException(e);
+				}
 			}
-			
-			try {
-				if(con != null) con.close();
-			}catch(SQLException sqlEx) {
-				sqlEx.printStackTrace();
+
+			if(con != null) {
+				try {
+					con.close();					
+				}catch(SQLException e) {
+					con = null;
+					throw new ServletException(e);
+				}
 			}
 		}
 		return i;
@@ -73,19 +79,22 @@ public class ValetParkingDAOMysql implements ValetParkingDAO {
 	/**
 	 * Returns a single tuple from DB with the given id number (prime key)
 	 * 
-	 * @param id id of item, that is primary key
+	 * @param id id of item, that is primary key  
 	 * @return ValetParking object
 	 */
-	public ValetParking read(int id) {
+
+/* NOTE:
+ * The try-with-resources Statement.(non-Javadoc)
+ * Resource classes must implement AutoCloseable (both Connection and PreparedStatement do)
+ * A try-with-resources statement can have catch and finally blocks just like an ordinary try statement.
+ * In a try-with-resources statement, any catch or finally block is run after the resources declared have been closed.
+ */
+	public ValetParking read(int id) throws ServletException {
 		ValetParking vp = null;
+		String sql = "SELECT name, registration, arrival_date FROM car_list WHERE id = ?";
 		
-		Connection con = null;
-		PreparedStatement pstm = null;
-		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			con = DAOFactoryMysql.getConnection();
-			String sql = "SELECT name, registration, arrival_date FROM car_list WHERE id = ?";
-			pstm = con.prepareStatement(sql);
+// NOTE: The close methods of resources are called in the opposite order of their creation.
+		try(Connection con = DAOFactoryMysql.getConnection(); PreparedStatement pstm = con.prepareStatement(sql)) {
 			pstm.setInt(1, id);
 			ResultSet rs = pstm.executeQuery();
 			while(rs.next()) {
@@ -93,6 +102,7 @@ public class ValetParkingDAOMysql implements ValetParkingDAO {
 				String registration = rs.getString(2);
 				Date date = rs.getDate(3);
 				LocalDate arrival_date = null;
+				// TODO - change the code
 				if(rs.wasNull()) {
 					System.out.println("Arrival date value was not null, but it is working...");
 				}else {
@@ -100,25 +110,9 @@ public class ValetParkingDAOMysql implements ValetParkingDAO {
 				}
 				vp = new ValetParking(id, name, registration, arrival_date);
 			}
-		}catch(ClassNotFoundException cnfEx) {
-			cnfEx.printStackTrace();
-		}catch(SQLException sqlEx) {
-			sqlEx.printStackTrace();
-		}finally {
-			if(pstm != null) {
-				try {
-					pstm.close();
-				}catch(SQLException sqlEx) {
-					sqlEx.printStackTrace();
-				}
-			}
-			if(con != null) {
-				try {
-					con.close();
-				}catch (SQLException sqlEx) {
-					sqlEx.printStackTrace();
-				}
-			}
+		}catch(ClassNotFoundException | SQLException e) {
+// NOTE: Wrap ClassNotFoundException and SQLException in ServletException
+			throw new ServletException(e);
 		}
 		return vp;
 	}
@@ -128,22 +122,12 @@ public class ValetParkingDAOMysql implements ValetParkingDAO {
 	 * 
 	 * @return List of ValetParking objects
 	 */
-	public List<ValetParking> readAll() {
-		Connection con = null;
-		
+	public List<ValetParking> readAll() throws ServletException {
 		List<ValetParking> items = new ArrayList<ValetParking>();
-		try {
-			// Step 3 Create Connection
-			con = DAOFactoryMysql.getConnection();
-			
-			// Step 4 Create Statement
-			Statement stm = con.createStatement();
-			
-			// Step 5 Execute the query
+
+		try(Connection con = DAOFactoryMysql.getConnection(); Statement stm = con.createStatement()) {
 			String sql = "SELECT id, name, registration, arrival_date FROM car_list";
 			stm.executeQuery(sql);
-			
-			// Step 6 Process ResultSet
 			ResultSet rs = stm.getResultSet();
 			
 			while(rs.next()) {
@@ -152,6 +136,7 @@ public class ValetParkingDAOMysql implements ValetParkingDAO {
 				String registration = rs.getString(3);
 				Date date = rs.getDate(4);
 				LocalDate arrival_date = null;
+				// TODO - change code
 				if(rs.wasNull()) {
 					System.out.println("Arrival date value was not null, but it is working...");
 				}else {
@@ -160,14 +145,8 @@ public class ValetParkingDAOMysql implements ValetParkingDAO {
 				ValetParking vp = new ValetParking(id, name, registration, arrival_date);
 				items.add(vp);
 			}
-			
-			// Step 7 Close connection
-			stm.close();
-			con.close();
-		} catch (ClassNotFoundException cnfEx) {
-			cnfEx.printStackTrace();
-		} catch (SQLException sqlEx) {
-			sqlEx.printStackTrace();
+		}catch (ClassNotFoundException | SQLException e) {
+			throw new ServletException(e);
 		}
 		return items;
 	}
@@ -178,33 +157,18 @@ public class ValetParkingDAOMysql implements ValetParkingDAO {
 	 * @param item ValetParking object
 	 * @return 0 if no data were updated or 1 if data were updated
 	 */
-	public int update(ValetParking item) {
+	public int update(ValetParking item) throws ServletException {
 		int i = 0;
-		
-		Connection con = null;
-		PreparedStatement pstm = null;
-		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			con = DAOFactoryMysql.getConnection();
-			String sql = "UPDATE car_list SET name=?, registration=?, arrival_date=? WHERE id=?";
-			pstm = con.prepareStatement(sql);
+
+		String sql = "UPDATE car_list SET name=?, registration=?, arrival_date=? WHERE id=?";
+		try(Connection con = DAOFactoryMysql.getConnection(); PreparedStatement pstm = con.prepareStatement(sql)) {
 			pstm.setString(1, item.getName());
 			pstm.setString(2, item.getRegistration());
 			pstm.setDate(3, Date.valueOf(item.getArrivalDate().toString()));
 			pstm.setInt(4, item.getId());
 			i = pstm.executeUpdate();
-		}catch(ClassNotFoundException cnfEx) {
-			cnfEx.printStackTrace();
-		}catch(SQLException sqlEx) {
-			sqlEx.printStackTrace();
-		}finally {
-			if(con != null) {
-				try {
-					con.close();
-				}catch(SQLException sqlEx) {
-					sqlEx.printStackTrace();
-				}
-			}
+		}catch(ClassNotFoundException | SQLException e) {
+			throw new ServletException(e);
 		}
 		return i;
 	}
@@ -215,37 +179,15 @@ public class ValetParkingDAOMysql implements ValetParkingDAO {
 	 * @param id id of item that is primary key
 	 * @return 0 if no data were deleted or 1 if the data where deleted
 	 */
-	public int delete(int id) {
+	public int delete(int id) throws ServletException {
 		int i = 0;
 		
-		Connection con = null;
-		PreparedStatement pstm = null;
-		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			con = DAOFactoryMysql.getConnection();
-			String sql = "DELETE FROM car_list WHERE id=?";
-			pstm = con.prepareStatement(sql);
+		String sql = "DELETE FROM car_list WHERE id=?";
+		try(Connection con = DAOFactoryMysql.getConnection(); PreparedStatement pstm = con.prepareStatement(sql)) {
 			pstm.setInt(1, id);
 			i = pstm.executeUpdate();
-		}catch (ClassNotFoundException cnfEx) {
-			cnfEx.printStackTrace();
-		}catch (SQLException sqlEx) {
-			sqlEx.printStackTrace();
-		}finally {
-			if(pstm != null) {
-				try {
-					pstm.close();
-				}catch (SQLException sqlEx) {
-					sqlEx.printStackTrace();
-				}
-			}
-			if(con != null) {
-				try {
-					con.close();
-				}catch (SQLException sqlEx) {
-					sqlEx.printStackTrace();
-				}
-			}
+		}catch (ClassNotFoundException | SQLException e) {
+			throw new ServletException(e);
 		}
 		return i;
 	}

@@ -41,4 +41,39 @@
     <url-pattern>/valet-parking-update</url-pattern>
   </servlet-mapping>
   
+  <!-- Error and Exception -->
+  
+<!--  
+If no error-page declaration containing an exception-type fits using the class-hierarchy match,
+and the exception thrown is a ServletException or subclass thereof, 
+the container extracts the wrapped exception, as defined by the ServletException.getRootCause method. 
+A second pass is made over the error page declarations, 
+again attempting the match against the error page declarations, 
+but using the wrapped exception instead.
+ -->  
+  <servlet>
+    <servlet-name>exception-handler</servlet-name>
+    <servlet-class>com.vpm.ExceptionHandlerServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>exception-handler</servlet-name>
+    <url-pattern>/exception-handler</url-pattern>
+  </servlet-mapping>
+  
+<!-- NOTE: Error Code example and JSP Exception Handling page -->
+  <error-page>
+    <error-code>404</error-code>
+    <location>/error-page-not-found.jsp</location>
+  </error-page>
+  
+<!-- NOTE: Exception Type example -->
+  <error-page>
+    <exception-type>java.lang.IOException</exception-type>
+    <location>/exception-handler</location>
+  </error-page>
+
+  <!-- Default Error Page -->
+  <error-page>
+    <location>/exception-handler</location>
+  </error-page>  
 </web-app>

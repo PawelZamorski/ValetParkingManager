@@ -1,6 +1,7 @@
 package com.vpm;
 
 import java.util.List;
+import javax.servlet.ServletException;
 
 /**
  * CRUD interface - create, read, update, delete operation
@@ -11,13 +12,13 @@ import java.util.List;
  */
 public interface ValetParkingDAO {
 
-	public int create(ValetParking item);
+	public int create(ValetParking item) throws ServletException;
 	
-	public ValetParking read(int id);
+	public ValetParking read(int id) throws ServletException;
 	
-	public List<ValetParking> readAll();
+	public List<ValetParking> readAll() throws ServletException;
 	
-	public int update(ValetParking item);
+	public int update(ValetParking item) throws ServletException;
 	
-	public int delete(int id);
+	public int delete(int id) throws ServletException;
 }

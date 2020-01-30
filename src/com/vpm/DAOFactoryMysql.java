@@ -7,6 +7,8 @@ import java.sql.SQLException;
 /**
  * Implementation of DAOFactory abstract class for MySql RDBMS
  * 
+ * It uses JDBC API for accessing and manipulation of data in persistent storage.
+ * 
  * @author MoioM
  *
  */

@@ -1,7 +1,6 @@
 package com.vpm;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -14,13 +13,13 @@ import javax.servlet.http.HttpServletResponse;
 public class ValetParkingInsertServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
-	public void service(HttpServletRequest req, HttpServletResponse res) {
+	// Throw exceptions to be deal by servlet container. Set up web.xml. 
+	public void service(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		// Create DAOFactoryMysql using DAOFactory
 		DAOFactory mysqlFactory = DAOFactory.getDAOFactory(DAOFactory.MYSQL);
 		// Create ValetParkingDAO using DAOFactoryMysql
 		ValetParkingDAO vpDAO = mysqlFactory.getValetParkingDAO();
 
-		PrintWriter out = null;
 		// Get data from request
 		int id = Integer.parseInt(req.getParameter("id"));
 		String name = req.getParameter("name");
@@ -33,7 +32,7 @@ public class ValetParkingInsertServlet extends HttpServlet {
 		// Get data from Model (from database)
 		// Test if PrimaryKey is not repeated
 		if(vpDAO.read(vp.getId()) == null) {
-			int i = vpDAO.create(vp);
+			int i = vpDAO.create(vp);				
 			req.setAttribute("noOfInsertedItems", i);			
 		}else {
 			req.setAttribute("noOfInsertedItems", 0);			
@@ -46,37 +45,6 @@ public class ValetParkingInsertServlet extends HttpServlet {
 		
 		// Dispatch to View (JSP page)
 		RequestDispatcher dispatcher = req.getRequestDispatcher("valet-parking.jsp");
-		
-		try {
-			dispatcher.forward(req, res);
-		} catch (ServletException e1) {
-			try {
-				out = res.getWriter();
-				out.println("Servlet not found");
-			}catch(IOException ioEx) {
-				ioEx.printStackTrace();
-			}catch(Exception e) {
-				e.printStackTrace();
-			}finally {
-				if(out != null) {
-					out.flush();
-				}
-			}
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			e1.printStackTrace();
-			try {
-				out = res.getWriter();
-				out.println("Something went wrong");
-			}catch(IOException ioEx) {
-				ioEx.printStackTrace();
-			}catch(Exception e) {
-				e.printStackTrace();
-			}finally {
-				if(out != null) {
-					out.flush();
-				}
-			}
-		}
+		dispatcher.forward(req, res);
 	}
 }

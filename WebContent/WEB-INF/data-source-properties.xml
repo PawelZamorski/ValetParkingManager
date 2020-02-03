@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>Connection properties</comment>
+<entry key="driver">com.mysql.cj.jdbc.Driver</entry>
+<entry key="dburl">jdbc:mysql://localhost:3306/valet_parking?serverTimezone=UTC</entry>
+<entry key="user">root</entry>
+<entry key="password"></entry>
+</properties>

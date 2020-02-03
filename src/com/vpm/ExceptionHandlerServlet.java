@@ -9,6 +9,12 @@ import java.io.IOException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 
+/**
+ * 
+ * 
+ * @author Pawel Zamorski
+ *
+ */
 public class ExceptionHandlerServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 

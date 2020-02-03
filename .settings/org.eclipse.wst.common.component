@@ -2,6 +2,7 @@
     <wb-module deploy-name="ValetParkingManager">
         <wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/test"/>
         <property name="context-root" value="ValetParkingManager"/>
         <property name="java-output-path" value="/ValetParkingManager/build/classes"/>
     </wb-module>

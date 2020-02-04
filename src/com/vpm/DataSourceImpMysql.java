@@ -67,10 +67,4 @@ public class DataSourceImpMysql implements DataSource {
 	public void close() throws SQLException {
 		this.conn.close();
 	}
-
-	
-//	TODO - change to private, use in constructor
-//	private void getProperties(String path) {
-//	}
-	
 }

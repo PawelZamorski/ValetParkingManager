@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+	<!-- To specify null values, omit corresponding attribute -->
+    <car_list ID="1" NAME="ALA" REGISTRATION="123xc123" ARRIVAL_DATE="2020-02-18"/>
+    <car_list ID="2" NAME="John" REGISTRATION="222xc123" ARRIVAL_DATE="2020-02-17"/>
+    <car_list ID="3" NAME="Ted" REGISTRATION="3c123" ARRIVAL_DATE="2020-02-16"/>
+</dataset>

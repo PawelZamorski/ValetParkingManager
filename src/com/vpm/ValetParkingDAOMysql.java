@@ -143,7 +143,7 @@ public class ValetParkingDAOMysql implements ValetParkingDAO {
 				LocalDate arrival_date = null;
 				// TODO - change code
 				if(rs.wasNull()) {
-					System.out.println("Arrival date value was not null, but it is working...");
+					System.out.println("Arrival date value was null, but it is working...");
 				}else {
 					arrival_date = date.toLocalDate();
 				}

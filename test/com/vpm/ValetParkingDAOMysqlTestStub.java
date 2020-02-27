@@ -40,13 +40,14 @@ public class ValetParkingDAOMysqlTestStub extends DBTestCase {
 		}
 	
 	@Test
-	public void testCar_ListSelectAll() throws Exception
+	public void testSelectAll() throws Exception
     {
 		// Expected
 		List<ValetParking> expectedList = Arrays.asList(
-				new ValetParking(1, "ALA", "123xc123", java.sql.Date.valueOf("2020-02-18").toLocalDate()),
-				new ValetParking(2, "John", "222xc123", java.sql.Date.valueOf("2020-02-17").toLocalDate()),
-				new ValetParking(3, "Ted", "3c123", java.sql.Date.valueOf("2020-02-16").toLocalDate()));
+				new ValetParking(1, "Ala", "123xc123", java.sql.Date.valueOf("2020-02-18").toLocalDate()),
+				new ValetParking(2, java.sql.Date.valueOf("2020-02-17").toLocalDate()),
+				new ValetParking(3, null, null, java.sql.Date.valueOf("2020-02-16").toLocalDate()),
+				new ValetParking(4, "John", null, java.sql.Date.valueOf("2020-02-15").toLocalDate()));
 
 		// Actual
 		List<ValetParking> actualList = dao.readAll();
@@ -56,7 +57,7 @@ public class ValetParkingDAOMysqlTestStub extends DBTestCase {
 	
 	@Override
 	protected IDataSet getDataSet() throws Exception {
-		return new FlatXmlDataSetBuilder().build(new FileInputStream("user.xml"));
+		return new FlatXmlDataSetBuilder().build(new FileInputStream("car_list_data.xml"));
 	}
 	
 	// This method will setup database to initial position before testing any method.

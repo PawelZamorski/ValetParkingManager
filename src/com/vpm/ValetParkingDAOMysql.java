@@ -47,6 +47,7 @@ public class ValetParkingDAOMysql implements ValetParkingDAO {
 // NOTE: step 2: Create Connection
 //			con = DAOFactoryMysql.getConnection();
 // NOTE: step 3: Create PreparedStatement/Statement
+			// TODO - move sql to private static final
 			String sql = "INSERT INTO car_list (id, name, registration, arrival_date) VALUES (?, ?, ?, ?)";
 			pstm = this.con.prepareStatement(sql);
 // NOTE: step 4: Execute the query
@@ -85,7 +86,7 @@ public class ValetParkingDAOMysql implements ValetParkingDAO {
 	 * Returns a single tuple from DB with the given id number (prime key)
 	 * 
 	 * @param id id of item, that is primary key  
-	 * @return ValetParking object
+	 * @return ValetParking object or null if there is no data for a given id number
 	 */
 
 /* NOTE:
@@ -105,14 +106,10 @@ public class ValetParkingDAOMysql implements ValetParkingDAO {
 			while(rs.next()) {
 				String name = rs.getString(1);
 				String registration = rs.getString(2);
+				// Arrival date is obligatory in DB - no need to check for null value.
+				// If it is not obligatory it must be check as null will not convert to LocalDate
 				Date date = rs.getDate(3);
-				LocalDate arrival_date = null;
-				// TODO - change the code
-				if(rs.wasNull()) {
-					System.out.println("Arrival date value was not null, but it is working...");
-				}else {
-					arrival_date = date.toLocalDate();
-				}
+				LocalDate arrival_date = date.toLocalDate();
 				vp = new ValetParking(id, name, registration, arrival_date);
 			}
 		}catch(SQLException e) {
@@ -139,14 +136,10 @@ public class ValetParkingDAOMysql implements ValetParkingDAO {
 				int id = rs.getInt(1);
 				String name = rs.getString(2);
 				String registration = rs.getString(3);
+				// Arrival date is obligatory in DB
+				// If it is not obligatory it must be check as null will not convert to LocalDate
 				Date date = rs.getDate(4);
-				LocalDate arrival_date = null;
-				// TODO - change code
-				if(rs.wasNull()) {
-					System.out.println("Arrival date value was null, but it is working...");
-				}else {
-					arrival_date = date.toLocalDate();
-				}
+				LocalDate arrival_date = date.toLocalDate();
 				ValetParking vp = new ValetParking(id, name, registration, arrival_date);
 				items.add(vp);
 			}
